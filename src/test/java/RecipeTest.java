@@ -11,22 +11,46 @@ public class RecipeTest {
 
   @Test
   public void Recipe_instantiatesCorrectly_true() {
-    Recipe newRecipe = new Recipe("Chicken Pot Pie");
+    Recipe newRecipe = new Recipe("Chicken Pot Pie", "Bake that bird", 5);
     assertEquals(true, newRecipe instanceof Recipe);
-    }
+  }
+
+  @Test
+  public void getName_recipeInstantiatesWithNameInstructionAndRating_String() {
+    Recipe newRecipe = new Recipe("Chicken Pot Pie", "Bake that bird", 5);
+    assertEquals("Chicken Pot Pie", newRecipe.getName());
+    assertEquals("Bake that bird", newRecipe.getInstruction());
+    assertEquals(5, newRecipe.getRating());
+  //  if we MUST use an Integer, generally don't do this:
+  // Integer expected = 5;
+  // assertEquals(expected, newRecipe.getRating());
+  }
+
+  @Test
+  public void all_emptyAtFirst() {
+    assertEquals(Recipe.all().size(), 0);
+  }
+
+  @Test
+  public void equals_returnsTrueIfRecipe_Name_Instruction_Rating_AretheSame() {
+    Recipe fernandaWroteAndSentToDB = new Recipe("Chicken Pot Pie", "Bake that bird", 5);
+    Recipe fernandaSavedInTheDatabaseThenRetrievedObject = new Recipe("Chicken Pot Pie", "Bake that bird", 5);
+    assertTrue(fernandaWroteAndSentToDB.equals(fernandaSavedInTheDatabaseThenRetrievedObject));
+  }
+
+  @Test
+    public void save_savesIntoDatabase_true() {
+    Recipe newRecipe = new Recipe("Chicken Pot Pie", "Bake that bird", 5);
+    Recipe taesRecipe = new Recipe("Thanksgiving Turkey", "Bake that bird", 4);
+    newRecipe.save();
+    taesRecipe.save();
+    assertTrue(Recipe.all().get(0).equals(newRecipe));
+    assertTrue(Recipe.all().get(1).equals(taesRecipe));
+  }
+
+
 }
 
- //
- //  @Test
- //  public void getName_authorInstantiatesWithName_String() {
- //    Author myAuthor = new Author("Household chores");
- //    assertEquals("Household chores", myAuthor.getName());
- //  }
- //
- //  @Test
- //  public void all_emptyAtFirst() {
- //    assertEquals(Author.all().size(), 0);
- //  }
  //
  //   @Test
  //  public void equals_returnsTrueIfNamesAretheSame() {

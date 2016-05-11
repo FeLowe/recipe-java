@@ -5,10 +5,61 @@ import java.util.ArrayList;
 
 
 public class Recipe {
+  private int id;
   private String name;
+  private String instruction;
+  private int rating;
 
-  public Recipe(String name) {
+  public Recipe(String name, String instruction, int rating) {
     this.name = name;
+    this.instruction = instruction;
+    this.rating = rating;
+  }
+
+  public int getId() {
+    return id;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public String getInstruction() {
+    return instruction;
+  }
+
+  public int getRating() {
+    return rating;
+  }
+
+  public static List<Recipe> all() {
+    String sql = "SELECT id, name, instruction, rating FROM recipes";
+    try(Connection con = DB.sql2o.open()) {
+      return con.createQuery(sql).executeAndFetch(Recipe.class);
+    }
+  }
+
+  @Override
+  public boolean equals(Object otherRecipe) {
+    if (!(otherRecipe instanceof Recipe)) {
+      return false;
+    } else {
+      Recipe newRecipe = (Recipe) otherRecipe;
+      return this.getName().equals(newRecipe.getName()) &&
+             this.getId() == newRecipe.getId();
+    }
+  }
+
+  public void save() {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "INSERT INTO recipes (name, instruction, rating) VALUES (:name, :instruction, :rating)";
+      this.id = (int) con.createQuery(sql, true)
+        .addParameter("name", this.name)
+        .addParameter("instruction", this.instruction)
+        .addParameter("rating", this.rating)
+        .executeUpdate()
+        .getKey();
+    }
   }
 }
 
@@ -18,10 +69,6 @@ public class Recipe {
 //
 // public Recipe(String name, String instructions, int rating) {
 //   this.name = name;
-// }
-//
-// public String getName() {
-//   return name;
 // }
 //
 // public int getId() {
@@ -46,15 +93,6 @@ public class Recipe {
 //   }
 // }
 //
-// public void save() {
-//   try(Connection con = DB.sql2o.open()) {
-//     String sql = "INSERT INTO authors(name) VALUES (:name)";
-//     this.id = (int) con.createQuery(sql, true)
-//       .addParameter("name", this.name)
-//       .executeUpdate()
-//       .getKey();
-//   }
-// }
 //
 // public static Recipe find(int id) {
 //   try(Connection con = DB.sql2o.open()) {
