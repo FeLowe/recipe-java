@@ -21,9 +21,9 @@ public class RecipeTest {
     assertEquals("Chicken Pot Pie", newRecipe.getName());
     assertEquals("Bake that bird", newRecipe.getInstruction());
     assertEquals(5, newRecipe.getRating());
-  //  if we MUST use an Integer, generally don't do this:
-  // Integer expected = 5;
-  // assertEquals(expected, newRecipe.getRating());
+    //  if we MUST use an Integer, generally don't do this:
+    // Integer expected = 5;
+    // assertEquals(expected, newRecipe.getRating());
   }
 
   @Test
@@ -39,7 +39,7 @@ public class RecipeTest {
   }
 
   @Test
-    public void save_savesIntoDatabase_true() {
+  public void save_savesIntoDatabase_true() {
     Recipe newRecipe = new Recipe("Chicken Pot Pie", "Bake that bird", 5);
     Recipe taesRecipe = new Recipe("Thanksgiving Turkey", "Bake that bird", 4);
     newRecipe.save();
@@ -48,69 +48,61 @@ public class RecipeTest {
     assertTrue(Recipe.all().get(1).equals(taesRecipe));
   }
 
+  @Test
+  public void save_assignsIdToObject() {
+    Recipe newRecipe = new Recipe("Chicken Pot Pie", "Bake that bird", 5);
+    newRecipe.save();
+    Recipe savedRecipe = Recipe.all().get(0);
+    assertEquals(newRecipe.getId(), savedRecipe.getId());
+  }
 
+  @Test
+  public void find_findRecipeInDatabase_true() {
+    Recipe newRecipe = new Recipe("Chicken Pot Pie", "Bake that bird", 5);
+    newRecipe.save();
+    Recipe savedRecipe = Recipe.find(newRecipe.getId());
+    assertTrue(newRecipe.equals(savedRecipe));
+  }
+  @Test
+  public void add_addIngredientToRecipe__true() {
+    Recipe newRecipe = new Recipe("Chicken Pot Pie", "Bake that bird", 5);
+    newRecipe.save();
+    Ingredient newIngredient = new Ingredient("Carrot");
+    newIngredient.save();
+    newRecipe.addIngredient(newIngredient);
+    Ingredient savedIngredient = newRecipe.getIngredients().get(0);
+    assertTrue(newIngredient.equals(savedIngredient));
+  }
+  @Test
+  public void getIngredients_returnsAllRecipes_List() {
+    Recipe newRecipe = new Recipe("Chicken Pot Pie", "Bake that bird", 5);
+    newRecipe.save();
+    Ingredient newIngredient = new Ingredient("Carrot");
+    newIngredient.save();
+    newRecipe.addIngredient(newIngredient);
+    List savedIngredients = newRecipe.getIngredients();
+    assertEquals(1, savedIngredients.size());
+  }
+
+  @Test
+  public void update_updatesRecipeName_true() {
+    Recipe newRecipe = new Recipe("Chicken Pot Pie", "Bake that bird", 5);
+    newRecipe.save();
+    newRecipe.update("Beef Pot Pie", "Bake that moo", 5);
+    assertEquals("Beef Pot Pie", Recipe.find(newRecipe.getId()).getName());
+    assertEquals("Bake that moo", Recipe.find(newRecipe.getId()).getInstruction());
+    assertEquals(5, Recipe.find(newRecipe.getId()).getRating());
+  }
+
+  // @Test
+  // public void delete_deletesRecipe_0() {
+  //   Recipe newRecipe = new Recipe("Chicken Pot Pie", "Bake that bird", 5);
+  //   newRecipe.save();
+  //   Ingredient newIngredient = new Ingredient("Carrot");
+  //   newIngredient.save();
+  //   newRecipe.addIngredient(newIngredient);
+  //   newRecipe.delete();
+  //   assertEquals(0, newIngredient.getRecipes().size());
+  //   assertEquals("Carrot", newIngredient.getName());
+  // }
 }
-
- //
- //   @Test
- //  public void equals_returnsTrueIfNamesAretheSame() {
- //    Author firstAuthor = new Author("Household chores");
- //    Author secondAuthor = new Author("Household chores");
- //    assertTrue(firstAuthor.equals(secondAuthor));
- //  }
- //
- //  @Test
- //  public void save_savesIntoDatabase_true() {
- //    Author myAuthor = new Author("Household chores");
- //    myAuthor.save();
- //    assertTrue(Author.all().get(0).equals(myAuthor));
- //  }
- //
- //  @Test
- //   public void save_assignsIdToObject() {
- //     Author myAuthor = new Author("Household chores");
- //     myAuthor.save();
- //     Author savedAuthor = Author.all().get(0);
- //     assertEquals(myAuthor.getId(), savedAuthor.getId());
- //   }
- //
- // @Test
- //  public void find_findAuthorInDatabase_true() {
- //    Author myAuthor = new Author("Household chores");
- //    myAuthor.save();
- //    Author savedAuthor = Author.find(myAuthor.getId());
- //    assertTrue(myAuthor.equals(savedAuthor));
- //  }
- //
- //  @Test
- //  public void addBook_addsBookToAuthor_true() {
- //    Author myAuthor = new Author("Household chores");
- //    myAuthor.save();
- //    Book myBook = new Book("Mow the lawn");
- //    myBook.save();
- //    myAuthor.addBook(myBook);
- //    Book savedBook = myAuthor.getBooks().get(0);
- //    assertTrue(myBook.equals(savedBook));
- //  }
- //
- //  @Test
- //  public void getBooks_returnsAllBooks_List() {
- //    Author myAuthor = new Author("Household chores");
- //    myAuthor.save();
- //    Book myBook = new Book("Mow the lawn");
- //    myBook.save();
- //    myAuthor.addBook(myBook);
- //    List savedBooks = myAuthor.getBooks();
- //    assertEquals(1, savedBooks.size());
- //  }
- //
- //  @Test
- //  public void delete_deletesAllBooksAndAuthorsAssociations() {
- //    Author myAuthor = new Author("Household chores");
- //    myAuthor.save();
- //    Book myBook = new Book("Mow the lawn");
- //    myBook.save();
- //    myAuthor.addBook(myBook);
- //    myAuthor.delete();
- //    assertEquals(0, myBook.getAuthors().size());
- //  }

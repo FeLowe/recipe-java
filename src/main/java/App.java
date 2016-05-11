@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class App {
   public static void main (String[] args){
-  
+
   }
 }
 
@@ -78,16 +78,16 @@ public class App {
 //        return null;
 //      });
 //
-//     get("/books/:id", (request,response) -> {
-//       HashMap<String, Object> model = new HashMap<String, Object>();
-//       int book_id = Integer.parseInt(request.params(":id"));
-//       Book book = Book.find(book_id);
-//       model.put("book", book);
-//       model.put("allAuthors", Author.all());
-//       model.put("template", "templates/book.vtl");
-//       return new ModelAndView(model, layout);
-//     }, new VelocityTemplateEngine());
-//
+    // get("/books/:id", (request,response) -> {
+    //   HashMap<String, Object> model = new HashMap<String, Object>();
+    //   Author book_id = Integer.parseInt(request.params(":id"));
+    //   Book book = Book.find(book_id);
+    //   model.put("book", book);
+    //   model.put("allAuthors", Author.all());
+    //   model.put("template", "templates/book.vtl");
+    //   return new ModelAndView(model, layout);
+    // }, new VelocityTemplateEngine());
+
 //     get("/authors/:id", (request,response) ->{
 //       HashMap<String, Object> model = new HashMap<String, Object>();
 //       Author author = Author.find(Integer.parseInt(request.params(":id")));
