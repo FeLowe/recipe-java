@@ -15,7 +15,7 @@ public class IngredientTest {
     assertEquals(true, newIngredient instanceof Ingredient);
   }
   @Test
-  public void getName_IngredientInstantiatesWithNameInstructionAndRating_String() {
+  public void getName_IngredientInstantiatesWithName_String() {
     Ingredient newIngredient = new Ingredient("Carrot");
     assertEquals("Carrot", newIngredient.getName());
 
@@ -26,7 +26,7 @@ public class IngredientTest {
   }
 
   @Test
-  public void equals_returnsTrueIfIngredient_Name_AretheSame() {
+  public void equals_returnsTrueIfIngredientNameIstheSame_true() {
     Ingredient fernandaWroteAndSentToDB = new Ingredient("Carrot");
     Ingredient fernandaSavedInTheDatabaseThenRetrievedObject = new Ingredient("Carrot");
     assertTrue(fernandaWroteAndSentToDB.equals(fernandaSavedInTheDatabaseThenRetrievedObject));
@@ -60,31 +60,46 @@ public class IngredientTest {
      newIngredient.save();
      Recipe newRecipe = new Recipe("Chicken Pot Pie", "Bake that bird", 5);
      newRecipe.save();
-     newRecipe.addRecipe(newRecipe);
-     Recipe savedRecipe = newRecipe.getRecipes().get(0);
+     newIngredient.addRecipe(newRecipe);
+     Recipe savedRecipe = newIngredient.getRecipes().get(0);
      assertTrue(newRecipe.equals(savedRecipe));
    }
-}
-//
+
+   @Test
+   public void getRecipes_returnsAllRecipes_List() {
+     Recipe newRecipe = new Recipe("Chicken Pot Pie", "Bake that bird", 5);
+     newRecipe.save();
+     Ingredient newIngredient = new Ingredient("Carrot");
+     newIngredient.save();
+     newIngredient.addRecipe(newRecipe);
+     List savedRecipes = newIngredient.getRecipes();
+     assertEquals(1, savedRecipes.size());
+   }
+   @Test
+   public void update_updatesIngredientName_true() {
+     Ingredient newIngredient = new Ingredient("Carrot");
+     newIngredient.save();
+     newIngredient.update("Potatoes");
+     assertEquals("Potatoes", Ingredient.find(newIngredient.getId()).getName());
+   }
+   @Test
+   public void delete_deletesIngredient_true() {
+     Ingredient newIngredient = new Ingredient("Carrot");
+     newIngredient.save();
+     int newIngredientId = newIngredient.getId();
+     newIngredient.delete();
+     assertEquals(null, Ingredient.find(newIngredientId));
+   }
+ }
+
 //  @Test
-//  public void getAuthors_returnsAllAuthors_List() {
-//    Author newAuthor = new Author("Household chores");
-//    newAuthor.save();
-//    Book myBook = new Book("Mow the lawn");
-//    myBook.save();
-//    myBook.addAuthor(myAuthor);
-//    List savedAuthors = myBook.getAuthors();
-//    assertEquals(1, savedAuthors.size());
-//  }
-//
-//  @Test
-//  public void delete_deletesAllBooksAndAuthorsAssociations() {
-//    Author myAuthor = new Author("Household chores");
-//    myAuthor.save();
-//    Book myBook = new Book("Mow the lawn");
-//    myBook.save();
-//    myBook.addAuthor(myAuthor);
-//    myBook.delete();
-//    assertEquals(0, myAuthor.getBooks().size());
+//  public void delete_deletesAllIngredientsAndRecipesAssociations() {
+//    Recipe myRecipe = new Recipe("Household chores");
+//    myRecipe.save();
+//    Ingredient newIngredient = new Ingredient("Mow the lawn");
+//    newIngredient.save();
+//    newIngredient.addRecipe(myRecipe);
+//    newIngredient.delete();
+//    assertEquals(0, myRecipe.getIngredients().size());
 //  }
 //

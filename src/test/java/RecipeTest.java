@@ -94,15 +94,12 @@ public class RecipeTest {
     assertEquals(5, Recipe.find(newRecipe.getId()).getRating());
   }
 
-  // @Test
-  // public void delete_deletesRecipe_0() {
-  //   Recipe newRecipe = new Recipe("Chicken Pot Pie", "Bake that bird", 5);
-  //   newRecipe.save();
-  //   Ingredient newIngredient = new Ingredient("Carrot");
-  //   newIngredient.save();
-  //   newRecipe.addIngredient(newIngredient);
-  //   newRecipe.delete();
-  //   assertEquals(0, newIngredient.getRecipes().size());
-  //   assertEquals("Carrot", newIngredient.getName());
-  // }
+  @Test
+  public void delete_deletesRecipe_true() {
+    Recipe newRecipe = new Recipe("Chicken Pot Pie", "Bake that bird", 5);
+    newRecipe.save();
+    int newRecipeId = newRecipe.getId();
+    newRecipe.delete();
+    assertEquals(null, Recipe.find(newRecipeId));
+  }
 }

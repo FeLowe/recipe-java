@@ -5,158 +5,163 @@ import org.junit.ClassRule;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.fluentlenium.core.filter.FilterConstructor.*;
+import static org.junit.Assert.*;
 
-public class AppTest{
+public class AppTest extends FluentTest {
+  public WebDriver webDriver = new HtmlUnitDriver();
 
+  @Override
+  public WebDriver getDefaultDriver() {
+    return webDriver;
+  }
+
+  @ClassRule
+  public static ServerRule server = new ServerRule();
+
+  @Rule
+    public DatabaseRule database = new DatabaseRule();
+
+  @Test
+    public void rootTest() {
+      goTo("http://localhost:4567/");
+      assertThat(pageSource()).contains("Cookbook");
+    }
+
+  @Test
+  public void recipeIsCreatedTest() {
+    goTo("http://localhost:4567/");
+    click("a", withText("Add a Recipe"));
+    fill("#recipe_name").with("Chicken Pot Pie");
+    fill("#instruction").with("Bake that bird"); //dropdown fill?
+    fill("#rating").with("4"); //dropdown fill? Index??
+    submit(".btn");
+    assertThat(pageSource()).contains("Chicken Pot Pie");
+    assertThat(pageSource()).contains("Bake that bird");
+    assertThat(pageSource()).contains("4");
+  }
+
+   @Test
+    public void ingredientIsCreatedTest() {
+      Recipe testRecipe = new Recipe("Beef Stew");
+      testRecipe.save();
+      String url = String.format("http://localhost:4567/recipes/%d", testRecipe.getId());
+      goTo(url);
+      fill("#ingredients").with("Beef");
+      submit(".btn");
+      fill("#ingredients").with("Stew");
+      submit(".btn");
+      assertThat(pageSource()).contains("Beef");
+      assertThat(pageSource()).contains("Stew");
+  }
+
+  // @Test
+  // public void recipeShowPageDisplaysName() {
+  //   Recipe testRecipe = new Recipe("Paulo Coelho");
+  //   testRecipe.save();
+    String url = String.format("http://localhost:4567/recipes/%d", testRecipe.getId());
+    goTo(url);
+    assertThat(pageSource()).contains("Paulo Coelho");
+  }
+
+  // @Test
+  // public void ingredientShowPageDisplaysName() {
+  //   Ingredient testIngredient = new Ingredient("The Alchemist");
+  //   testIngredient.save();
+  //   String url = String.format("http://localhost:4567/ingredients/%d", testIngredient.getId());
+  //   goTo(url);
+  //   assertThat(pageSource()).contains("The Alchemist");
+  // }
+  //
+  // @Test
+  // public void ingredientIsAddedToRecipe() {
+  //   Recipe testRecipe = new Recipe("Paulo Coelho");
+  //   testRecipe.save();
+  //   Ingredient testIngredient = new Ingredient("The Alchemist");
+  //   testIngredient.save();
+  //   String url = String.format("http://localhost:4567/recipes/%d", testRecipe.getId());
+  //   goTo(url);
+  //   fillSelect("#ingredient_id").withText("The Alchemist");
+  //   submit(".btn");
+  //   assertThat(pageSource()).contains("<li>");
+  //   assertThat(pageSource()).contains("The Alchemist");
+  // }
+  //
+  // @Test
+  // public void recipeIsAddedToIngredient() {
+  //   Recipe testRecipe = new Recipe("Paulo Coelho");
+  //   testRecipe.save();
+  //   Ingredient testIngredient = new Ingredient("The Alchemist");
+  //   testIngredient.save();
+  //   String url = String.format("http://localhost:4567/ingredients/%d", testIngredient.getId());
+  //   goTo(url);
+  //   fillSelect("#recipe_id").withText("Paulo Coelho");
+  //   submit(".btn");
+  //   assertThat(pageSource()).contains("<li>");
+  //   assertThat(pageSource()).contains("Paulo Coelho");
+  // }
+  // @Test
+  // public void ingredientUpdate() {
+  //   Ingredient myIngredient = new Ingredient("Veronica Decides To Die");
+  //   myIngredient.save();
+  //   String ingredientPath = String.format("http://localhost:4567/ingredients/%d", myIngredient.getId());
+  //   goTo(ingredientPath);
+  //   click("a", withText("Edit this ingredient"));
+  //   fill("#ingredient-update").with("Veronica Decides To Live");
+  //   submit("#update-ingredient");
+  //   assertThat(pageSource()).doesNotContain("Veronica Decides To Die");
+  // }
+  //
+  // @Test
+  // public void ingredientDelete() {
+  //   Ingredient myIngredient = new Ingredient("Veronica Decides To Die");
+  //   myIngredient.save();
+  //   String ingredientPath = String.format("http://localhost:4567/ingredients/%d", myIngredient.getId());
+  //   goTo(ingredientPath);
+  //   click("a", withText("Delete this ingredient"));
+  //   String allIngredientsPath = String.format("http://localhost:4567/ingredients/");
+  //   goTo(allIngredientsPath);
+  //   assertThat(pageSource()).doesNotContain("Veronica Decides To Die");
+  // }
+  // @Test
+  // public void recipeUpdate() {
+  //   Recipe myRecipe = new Recipe("Paulo Coelho");
+  //   myRecipe.save();
+  //   String recipePath = String.format("http://localhost:4567/recipes/%d", myRecipe.getId());
+  //   goTo(recipePath);
+  //   click("a", withText("Edit this recipe"));
+  //   fill("#recipe-update").with("Paulo De Coelho");
+  //   submit("#update-recipe");
+  //   assertThat(pageSource()).doesNotContain("Paulo Coelho");
+  // }
+  //
+  // @Test
+  // public void recipeDelete() {
+  //   Recipe myRecipe = new Recipe("Paulo Coelho");
+  //   myRecipe.save();
+  //   String recipePath = String.format("http://localhost:4567/recipes/%d", myRecipe.getId());
+  //   goTo(recipePath);
+  //   click("a", withText("Delete this recipe"));
+  //   String allRecipesPath = String.format("http://localhost:4567/recipes/");
+  //   goTo(allRecipesPath);
+  //   assertThat(pageSource()).doesNotContain("Paulo Coelho");
+  // }
+  //
+  // @Test
+  // public void ingredientSearchByRecipeName() {
+  //   Recipe testRecipe = new Recipe("Paulo Coelho");
+  //   testRecipe.save();
+  //   Ingredient testIngredient = new Ingredient("The Alchemist");
+  //   testIngredient.save();
+  //   String url = String.format("http://localhost:4567/ingredients/%d", testIngredient.getId());
+  //   goTo(url);
+  //   fillSelect("#recipe_id").withText("Paulo Coelho");
+  //   submit(".btn");
+  //   goTo("http://localhost:4567/");
+  //   click("a", withText("Search for a ingredient"));
+  //   fill("#ingredient-search").with("Paulo Coelho");
+  //   submit("#search-button");
+  //   assertThat(pageSource()).contains("The Alchemist");
+  // }
 }
-
-// import static org.assertj.core.api.Assertions.assertThat;
-// import static org.fluentlenium.core.filter.FilterConstructor.*;
-// import static org.junit.Assert.*;
-//
-// public class AppTest extends FluentTest {
-//   public WebDriver webDriver = new HtmlUnitDriver();
-//
-//   @Override
-//   public WebDriver getDefaultDriver() {
-//     return webDriver;
-//   }
-//
-//   @ClassRule
-//   public static ServerRule server = new ServerRule();
-//
-//   @Rule
-//     public DatabaseRule database = new DatabaseRule();
-//
-//   @Test
-//     public void rootTest() {
-//       goTo("http://localhost:4567/");
-//       assertThat(pageSource()).contains("Books List!");
-//     }
-//
-//   @Test
-//   public void authorIsCreatedTest() {
-//     goTo("http://localhost:4567/");
-//     click("a", withText("Authors"));
-//     fill("#name").with("Paulo Coelho");
-//     submit(".btn");
-//     assertThat(pageSource()).contains("Paulo Coelho");
-//   }
-//
-//    @Test
-//     public void bookIsCreatedTest() {
-//       goTo("http://localhost:4567/");
-//       click("a", withText("Books"));
-//       fill("#name").with("The Alchemist");
-//       submit(".btn");
-//       assertThat(pageSource()).contains("The Alchemist");
-//   }
-//
-//   @Test
-//   public void authorShowPageDisplaysName() {
-//     Author testAuthor = new Author("Paulo Coelho");
-//     testAuthor.save();
-//     String url = String.format("http://localhost:4567/authors/%d", testAuthor.getId());
-//     goTo(url);
-//     assertThat(pageSource()).contains("Paulo Coelho");
-//   }
-//
-//   @Test
-//   public void bookShowPageDisplaysName() {
-//     Book testBook = new Book("The Alchemist");
-//     testBook.save();
-//     String url = String.format("http://localhost:4567/books/%d", testBook.getId());
-//     goTo(url);
-//     assertThat(pageSource()).contains("The Alchemist");
-//   }
-//
-//   @Test
-//   public void bookIsAddedToAuthor() {
-//     Author testAuthor = new Author("Paulo Coelho");
-//     testAuthor.save();
-//     Book testBook = new Book("The Alchemist");
-//     testBook.save();
-//     String url = String.format("http://localhost:4567/authors/%d", testAuthor.getId());
-//     goTo(url);
-//     fillSelect("#book_id").withText("The Alchemist");
-//     submit(".btn");
-//     assertThat(pageSource()).contains("<li>");
-//     assertThat(pageSource()).contains("The Alchemist");
-//   }
-//
-//   @Test
-//   public void authorIsAddedToBook() {
-//     Author testAuthor = new Author("Paulo Coelho");
-//     testAuthor.save();
-//     Book testBook = new Book("The Alchemist");
-//     testBook.save();
-//     String url = String.format("http://localhost:4567/books/%d", testBook.getId());
-//     goTo(url);
-//     fillSelect("#author_id").withText("Paulo Coelho");
-//     submit(".btn");
-//     assertThat(pageSource()).contains("<li>");
-//     assertThat(pageSource()).contains("Paulo Coelho");
-//   }
-//   @Test
-//   public void bookUpdate() {
-//     Book myBook = new Book("Veronica Decides To Die");
-//     myBook.save();
-//     String bookPath = String.format("http://localhost:4567/books/%d", myBook.getId());
-//     goTo(bookPath);
-//     click("a", withText("Edit this book"));
-//     fill("#book-update").with("Veronica Decides To Live");
-//     submit("#update-book");
-//     assertThat(pageSource()).doesNotContain("Veronica Decides To Die");
-//   }
-//
-//   @Test
-//   public void bookDelete() {
-//     Book myBook = new Book("Veronica Decides To Die");
-//     myBook.save();
-//     String bookPath = String.format("http://localhost:4567/books/%d", myBook.getId());
-//     goTo(bookPath);
-//     click("a", withText("Delete this book"));
-//     String allBooksPath = String.format("http://localhost:4567/books/");
-//     goTo(allBooksPath);
-//     assertThat(pageSource()).doesNotContain("Veronica Decides To Die");
-//   }
-//   @Test
-//   public void authorUpdate() {
-//     Author myAuthor = new Author("Paulo Coelho");
-//     myAuthor.save();
-//     String authorPath = String.format("http://localhost:4567/authors/%d", myAuthor.getId());
-//     goTo(authorPath);
-//     click("a", withText("Edit this author"));
-//     fill("#author-update").with("Paulo De Coelho");
-//     submit("#update-author");
-//     assertThat(pageSource()).doesNotContain("Paulo Coelho");
-//   }
-//
-//   @Test
-//   public void authorDelete() {
-//     Author myAuthor = new Author("Paulo Coelho");
-//     myAuthor.save();
-//     String authorPath = String.format("http://localhost:4567/authors/%d", myAuthor.getId());
-//     goTo(authorPath);
-//     click("a", withText("Delete this author"));
-//     String allAuthorsPath = String.format("http://localhost:4567/authors/");
-//     goTo(allAuthorsPath);
-//     assertThat(pageSource()).doesNotContain("Paulo Coelho");
-//   }
-//
-//   @Test
-//   public void bookSearchByAuthorName() {
-//     Author testAuthor = new Author("Paulo Coelho");
-//     testAuthor.save();
-//     Book testBook = new Book("The Alchemist");
-//     testBook.save();
-//     String url = String.format("http://localhost:4567/books/%d", testBook.getId());
-//     goTo(url);
-//     fillSelect("#author_id").withText("Paulo Coelho");
-//     submit(".btn");
-//     goTo("http://localhost:4567/");
-//     click("a", withText("Search for a book"));
-//     fill("#book-search").with("Paulo Coelho");
-//     submit("#search-button");
-//     assertThat(pageSource()).contains("The Alchemist");
-//   }

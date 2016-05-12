@@ -58,10 +58,6 @@ public class Ingredient {
       }
     }
 
-
-}
-
-
   public void update(String newIngredient) {
     try(Connection con = DB.sql2o.open()) {
       String sql = "UPDATE ingredients SET name = :name WHERE id = :id";
@@ -79,39 +75,40 @@ public class Ingredient {
         .addParameter("id", this.getId())
         .executeUpdate();
 
-      String joinDeleteQuery = "DELETE FROM authors_ingredients WHERE ingredient_id = :ingredientId";
+      String joinDeleteQuery = "DELETE FROM recipes_ingredients WHERE ingredient_id = :ingredientId";
         con.createQuery(joinDeleteQuery)
           .addParameter("ingredientId", this.getId())
           .executeUpdate();
     }
   }
-//
-//   public void addAuthor(Author author) {
-//   try(Connection con = DB.sql2o.open()) {
-//     String sql = "INSERT INTO authors_ingredients (author_id, ingredient_id) VALUES (:author_id, :ingredient_id)";
-//     con.createQuery(sql)
-//       .addParameter("author_id", author.getId())
-//       .addParameter("ingredient_id", this.getId())
-//       .executeUpdate();
-//   }
-// }
-//
-//   public List<Author> getAuthors() {
-//     try(Connection con = DB.sql2o.open()){
-//       String joinQuery = "SELECT author_id FROM authors_ingredients WHERE ingredient_id = :ingredient_id";
-//       List<Integer> authorIds = con.createQuery(joinQuery)
-//         .addParameter("ingredient_id", this.getId())
-//         .executeAndFetch(Integer.class);
-//
-//       List<Author> authors = new ArrayList<Author>();
-//
-//       for (Integer authorId : authorIds) {
-//         String ingredientQuery = "Select * From authors WHERE id = :authorId";
-//         Author author = con.createQuery(ingredientQuery)
-//           .addParameter("authorId", authorId)
-//           .executeAndFetchFirst(Author.class);
-//         authors.add(author);
-//       }
-//       return authors;
-//     }
-//   }
+
+  public void addRecipe(Recipe recipe) {
+  try(Connection con = DB.sql2o.open()) {
+    String sql = "INSERT INTO recipes_ingredients (recipe_id, ingredient_id) VALUES (:recipe_id, :ingredient_id)";
+    con.createQuery(sql)
+      .addParameter("recipe_id", recipe.getId())
+      .addParameter("ingredient_id", this.getId())
+      .executeUpdate();
+  }
+}
+
+  public List<Recipe> getRecipes() {
+    try(Connection con = DB.sql2o.open()){
+      String joinQuery = "SELECT recipe_id FROM recipes_ingredients WHERE ingredient_id = :ingredient_id";
+      List<Integer> recipeIds = con.createQuery(joinQuery)
+        .addParameter("ingredient_id", this.getId())
+        .executeAndFetch(Integer.class);
+
+      List<Recipe> recipes = new ArrayList<Recipe>();
+
+      for (Integer recipeId : recipeIds) {
+        String ingredientQuery = "SELECT * FROM recipes WHERE id = :recipeId";
+        Recipe recipe = con.createQuery(ingredientQuery)
+          .addParameter("recipeId", recipeId)
+          .executeAndFetchFirst(Recipe.class);
+        recipes.add(recipe);
+      }
+      return recipes;
+    }
+  }
+}
