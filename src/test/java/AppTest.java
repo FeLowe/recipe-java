@@ -44,13 +44,13 @@ public class AppTest extends FluentTest {
 
    @Test
     public void ingredientIsCreatedTest() {
-      Recipe testRecipe = new Recipe("Beef Stew");
-      testRecipe.save();
-      String url = String.format("http://localhost:4567/recipes/%d", testRecipe.getId());
+      Ingredient testIngredient = new Ingredient("Potatoes");
+      testIngredient.save();
+      String url = String.format("http://localhost:4567/ingredient/%d", testIngredient.getId());
       goTo(url);
-      fill("#ingredients").with("Beef");
+      fill("#ingredient").with("Beef");
       submit(".btn");
-      fill("#ingredients").with("Stew");
+      fill("#ingredient").with("Stew");
       submit(".btn");
       assertThat(pageSource()).contains("Beef");
       assertThat(pageSource()).contains("Stew");
@@ -60,10 +60,10 @@ public class AppTest extends FluentTest {
   // public void recipeShowPageDisplaysName() {
   //   Recipe testRecipe = new Recipe("Paulo Coelho");
   //   testRecipe.save();
-    String url = String.format("http://localhost:4567/recipes/%d", testRecipe.getId());
-    goTo(url);
-    assertThat(pageSource()).contains("Paulo Coelho");
-  }
+  //   String url = String.format("http://localhost:4567/recipes/%d", testRecipe.getId());
+  //   goTo(url);
+  //   assertThat(pageSource()).contains("Paulo Coelho");
+  // }
 
   // @Test
   // public void ingredientShowPageDisplaysName() {

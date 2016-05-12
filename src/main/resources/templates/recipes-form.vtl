@@ -2,17 +2,17 @@
 
 <ul>
   #foreach ($recipe in $recipes)
-    <li><a href="/recipe.getId()">Name: $recipe.getName() <br> Instruction: $recipe.getInstruction() <br> Rating: $recipe.getRating()</a></li>
+    <li><a href="/recipes/$recipe.getId()">Name: $recipe.getName() <br> Instruction: $recipe.getInstruction() <br> Rating: $recipe.getRating()</a></li>
   #end
 </ul>
 
 <p>Add a new recipe:</p>
 
-<form action="/recipes/new" method="post" id="recipe_form">
+<form action="/recipes" method="post" id="recipe_form">
   <label for="recipe_name">Recipe name</label>
   <input id="recipe_name" name="recipe_name" type="text">
   <br>
-  <label for="instruction">Recipe instruction</label>
+  <label for="instruction">Recipe instructions</label>
   <textarea id="instruction" name="instruction" form="recipe_form" placeholder="Bake that bird"></textarea>##rows="4" cols="50"
   <br>
   <label for="rating">Recipe rating</label>

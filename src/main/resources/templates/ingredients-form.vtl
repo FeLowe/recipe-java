@@ -1,0 +1,33 @@
+<h1>$recipe.getName()</h1>
+
+  <ul>
+    #foreach($recipe in $ingredient.getRecipes())
+      <li>$recipe.getName()</li>
+    #end
+  </ul>
+#end
+
+<ul>
+  #foreach ($recipe in $recipes)
+    <li><a href="/recipes/$recipe.getId()">Name: $recipe.getName() <br> Instruction: $recipe.getInstruction() <br> Rating: $recipe.getRating()</a></li>
+  #end
+</ul>
+
+<h4>Add an ingredient to this recipe:</h4>
+
+<form action="/ingredients" method="post">
+  <input id="recipe_id" name="recipe_id" type="hidden" value="$recipe.getId()">
+
+  <div class="form-group">
+    <label for="ingredient">Ingredient</label>
+    <input id="ingredient" name="ingredient" type="text" class="form-control">
+  </div>
+
+  <button type="submit" class="btn btn-info">Add ingredient</button>
+</form>
+
+##<p><a href="/ingredients/$ingredient.getId()/edit">Edit this ingredient</a></p>
+##<p><a href="/ingredients/$ingredient.getId()/delete">Delete this ingredient</a></p>
+<p><a href="/tags">Add Tags</a></p>
+<p><a href="/recipes">View all Recipes</a></p>
+<p><a href="/">Home</a></p>

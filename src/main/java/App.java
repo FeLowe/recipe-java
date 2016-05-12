@@ -18,24 +18,93 @@ public class App {
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
-    get("/recipes/new", (request, response) -> {
+    get("/recipes", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
-      // Recipe newRecipe = new Recipe (String, String, int);
       model.put("recipes", Recipe.all());
       model.put("template", "templates/recipes-form.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
-    post("/recipes/new", (request, response) -> {
+    post("/recipes", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
-      String name = request.queryParams("recipe_name");
-      String instruction = request.queryParams("instruction");
-      int rating = Integer.parseInt(request.queryParams("rating"));
-      Recipe newRecipe = new Recipe(name, instruction, rating);
+      String recipeName = request.queryParams("recipe_name");
+      String recipeInstruction = request.queryParams("instruction");
+      int recipeRating = Integer.parseInt(request.queryParams("rating"));
+      Recipe newRecipe = new Recipe(recipeName, recipeInstruction, recipeRating);
       newRecipe.save();
-      response.redirect("/recipes/new");
+      response.redirect("/recipes");
       return null;
     });
+
+    get("/ingredients", (request, response) -> {
+      Map<String, Object> model = new HashMap<String, Object>();
+      model.put("ingredients", Ingredient.all());
+      model.put("template", "templates/ingredients-form.vtl");
+      return new ModelAndView(model, layout);
+    }, new VelocityTemplateEngine());
+
+
+    post("/ingredients", (request, response) -> {
+      Map<String, Object> model = new HashMap<String, Object>();
+      String userIngredient = request.queryParams("ingredient");
+      Ingredient newIngredient = new Ingredient(userIngredient);
+      newIngredient.save();
+      response.redirect("/ingredients");
+      return null;
+    });
+
+    // get("/recipes/:id", (request, response) -> {
+    //   Map<String, Object> model = new HashMap<String, Object>();
+    //   Recipe recipe = Recipe.find(Integer.parseInt(request.params(":id")));
+    //   model.put("recipe", recipe);
+    //   model.put("allIngredients", Ingredient.all());
+    //   model.put("template", "templates/ingredients-form.vtl");
+    //   return new ModelAndView(model, layout);
+    // }, new VelocityTemplateEngine());
+    //
+    // post("/recipes/:id", (request, response) -> {
+    //   Map<String, Object> model = new HashMap<String, Object>();
+    //   int recipeId = Integer.parseInt(request.queryParams("recipe_id"));
+    //   Ingredient newIngredient = new Ingredient (request.queryParams("ingredient"));
+    //   Recipe recipe = Recipe.find(recipeId);
+    //   newIngredient.save();
+    //   newIngredient.addRecipe(recipe);
+    //   response.redirect("/recipes/" + recipeId);
+    //   return null;
+    // });
+
+    // get("/recipes/:id", (request,response) ->{
+    //   HashMap<String, Object> model = new HashMap<String, Object>();
+    //   Recipe recipe = Recipe.find(Integer.parseInt(request.params(":id")));
+    //   model.put("recipe", recipe);
+    //   model.put("allBooks", Book.all());
+    //   model.put("template", "templates/recipe.vtl");
+    //   return new ModelAndView(model, layout);
+    // }, new VelocityTemplateEngine());
+    //
+    // post("/add_books", (request, response) -> {
+    //   int bookId = Integer.parseInt(request.queryParams("book_id"));
+    //   int recipeId = Integer.parseInt(request.queryParams("recipe_id"));
+    //   Recipe recipe = Recipe.find(recipeId);
+    //   Book book = Book.find(bookId);
+    //   recipe.addBook(book);
+    //   response.redirect("/recipes/" + recipeId);
+    //   return null;
+    // });
+
+
+
+//hidden id??
+
+    // post("/add_recipes", (request, response) -> {
+    //   int ingredientId = Integer.parseInt(request.queryParams("book_id"));
+    //   int recipeId = Integer.parseInt(request.queryParams("recipe_id"));
+    //   Recipe recipe = Recipe.find(recipeId);
+    //   Book book = Book.find(bookId);
+    //   book.addRecipe(recipe);
+    //   response.redirect("/books/" + bookId);
+    //   return null;
+
 
     // get("/recipes", (request, response) -> {
     //   HashMap<String, Object> model = new HashMap<String, Object>();
